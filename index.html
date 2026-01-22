@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Calculator</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 40px 10px; }
+.container { max-width: 700px; }
+.card { border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+.card-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px 15px 0 0 !important; padding: 20px; }
+.form-label { font-weight: 600; color: #495057; }
+.form-control:focus, .form-select:focus { border-color: #667eea; box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25); }
+.btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 12px 30px; font-weight: 600; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+.result-card { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 10px; padding: 25px; margin-top: 20px; display: none; }
+.result-card.show { display: block; animation: slideIn 0.5s ease; }
+@keyframes slideIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.error-message { color: #dc3545; font-weight: 600; margin-top: 10px; display: none; }
+.error-message.show { display: block; }
+@media (max-width: 576px) { .card-body { padding: 15px; } .btn-primary { padding: 10px 20px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="card">
+<div class="card-header text-center">
+<h2 class="mb-0">Premium Calculator</h2>
+<p class="mb-0 small">Enter details to calculate your premium</p>
+</div>
+<div class="card-body p-4">
+<form id="rateForm">
+    <!-- Name -->
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control form-control-lg" id="name" placeholder="Enter your name" required>
+    </div>
+    <!-- DOB -->
+    <div class="mb-3">
+        <label for="dob" class="form-label">Date of Birth</label>
+        <input type="date" class="form-control form-control-lg" id="dob" required>
+    </div>
+    <!-- Gender -->
+    <div class="mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select class="form-select form-select-lg" id="gender" required>
+            <option value="">Select gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+    </div>
+    <!-- Term -->
+    <div class="mb-3">
+        <label for="term" class="form-label">Term / Rate</label>
+        <select class="form-select form-select-lg" id="term" required>
+            <option value="">Select term</option>
+            <option value="03_20">03/20</option>
+            <option value="03_15">03/15</option>
+            <option value="03_10">03/10</option>
+        </select>
+    </div>
+    <!-- Professional -->
+    <div class="mb-3">
+        <label for="professional" class="form-label">Professional</label>
+        <select class="form-select form-select-lg" id="professional" required>
+            <option value="1.25">Standard</option>
+        </select>
+    </div>
+    <!-- Sum Assured -->
+    <div class="mb-3">
+        <label for="sumAssured" class="form-label">Sum Assured</label>
+        <input type="number" class="form-control form-control-lg" id="sumAssured" placeholder="Enter sum assured" min="0" required>
+    </div>
+    <div class="d-grid mt-3">
+        <button type="submit" class="btn btn-primary btn-lg">Calculate Premium</button>
+    </div>
+</form>
+
+<div class="error-message" id="errorMessage"></div>
+
+<!-- Result Card -->
+<div class="result-card" id="resultCard">
+<div class="text-left">
+    <h2><strong>Name:</strong> <span id="displayName">--</span></h2>
+    <h2><strong>Premium:</strong> <span id="premiumValue">--</span></h2>
+    <p><strong>Sum Assured:</strong> <span id="displaySumAssured">--</span></p>
+    <p><strong>Age:</strong> <span id="displayAge">--</span> | <strong>Gender:</strong> <span id="displayGender">--</span></p>
+    <p><strong>Term:</strong> <span id="displayTerm">--</span> | <strong>Professional:</strong> <span id="displayProfessional">--</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+const rateData = {
+"20": {"03_20":47.73,   "03_15":64.44,  "03_10":99.04},
+"21": {"03_20":47.77,   "03_15":64.47,  "03_10":99.07},
+"22": {"03_20":47.82,   "03_15":64.51,  "03_10":99.10},
+"23": {"03_20":47.87,   "03_15":64.55,  "03_10":99.13},
+"24": {"03_20":47.93,   "03_15":64.59,  "03_10":99.16},
+"25": {"03_20":47.99,   "03_15":64.63,  "03_10":99.20},
+"26": {"03_20":48.05,   "03_15":64.69,  "03_10":99.24},
+"27": {"03_20":48.13,   "03_15":64.74,  "03_10":99.32},
+"28": {"03_20":48.22,   "03_15":64.80,  "03_10":99.38},
+"29": {"03_20":48.31,   "03_15":64.87,  "03_10":99.44},
+"30": {"03_20":48.42,   "03_15":64.95,  "03_10":99.53},
+"31": {"03_20":48.54,   "03_15":65.03,  "03_10":99.45},
+"32": {"03_20":48.67,   "03_15":65.13,  "03_10":99.56},
+"33": {"03_20":48.83,   "03_15":65.24,  "03_10":99.64},
+"34": {"03_20":49.00,   "03_15":65.36,  "03_10":99.72},
+"35": {"03_20":49.20,   "03_15":65.50,  "03_10":99.82},
+"36": {"03_20":49.43,   "03_15":65.65,  "03_10":99.93},
+"37": {"03_20":49.69,   "03_15":65.84,  "03_10":100.06},
+"38": {"03_20":49.99,   "03_15":66.04,  "03_10":100.20},
+"39": {"03_20":50.32,   "03_15":66.28,  "03_10":100.36},
+"40": {"03_20":50.71,   "03_15":66.54,  "03_10":100.55},
+"41": {"03_20":51.14,   "03_15":66.85,  "03_10":100.76},
+"42": {"03_20":51.63,   "03_15":67.21,  "03_10":101.00}, 
+"43": {"03_20":52.17,   "03_15":67.61,  "03_10":101.28},
+"44": {"03_20":52.79,   "03_15":68.07,  "03_10":101.61},
+"45": {"03_20":53.47,   "03_15":68.59,  "03_10":101.97},
+"46": {"03_20":54.23,   "03_15":69.18,  "03_10":102.40},
+"47": {"03_20":55.07,   "03_15":69.84,  "03_10":102.88},
+"48": {"03_20":56.00,   "03_15":70.58,  "03_10":103.44},
+"49": {"03_20":57.02,   "03_15":71.41,  "03_10":104.07},
+"50": {"03_20":58.13,   "03_15":72.32,  "03_10":104.77},
+"51": {"03_20":59.35,   "03_15":73.32,  "03_10":105.57},
+"52": {"03_20":60.66,   "03_15":74.41,  "03_10":106.44},
+"53": {"03_20":62.09,   "03_15":75.59,  "03_10":107.39},
+"54": {"03_20":63.62,   "03_15":76.86,  "03_10":108.43},
+"55": {"03_20":65.27,   "03_15":78.23,  "03_10":109.54},
+"56": {"03_20":"",      "03_15":79.69,  "03_10":110.72},
+"57": {"03_20":"",      "03_15":81.25,  "03_10":111.99},
+"58": {"03_20":"",      "03_15":"",     "03_10":113.32},
+"59": {"03_20":"",      "03_15":"",     "03_10":114.74},
+"60": {"03_20":"",      "03_15":"",     "03_10":116.25}
+};
+
+const form = document.getElementById('rateForm');
+const resultCard = document.getElementById('resultCard');
+const errorMessage = document.getElementById('errorMessage');
+const displayName = document.getElementById('displayName');
+const displayAge = document.getElementById('displayAge');
+const displayTerm = document.getElementById('displayTerm');
+const displayGender = document.getElementById('displayGender');
+const displayProfessional = document.getElementById('displayProfessional');
+const displaySumAssured = document.getElementById('displaySumAssured');
+const premiumValue = document.getElementById('premiumValue');
+
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const dob = document.getElementById('dob').value;
+    const gender = document.getElementById('gender').value;
+    const term = document.getElementById('term').value;
+    const professional = document.getElementById('professional').value;
+    const sumAssuredInput = document.getElementById('sumAssured').value;
+    const sumAssured = parseFloat(sumAssuredInput);
+
+    resultCard.classList.remove('show');
+    errorMessage.classList.remove('show');
+
+    if (!name || !dob || !gender || !term || !professional || !sumAssuredInput || isNaN(sumAssured)) {
+        errorMessage.textContent = 'Please fill in all fields correctly';
+        errorMessage.classList.add('show');
+        return;
+    }
+
+    // Calculate Age
+    const dobDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - dobDate.getFullYear();
+    if (today.getMonth() < dobDate.getMonth() || (today.getMonth() === dobDate.getMonth() && today.getDate() < dobDate.getDate())) {
+        age--;
+    }
+    if (gender === 'Female') age -= 2;
+
+    if (age < 20 || age > 60) {
+        errorMessage.textContent = 'Rate not available for this age';
+        errorMessage.classList.add('show');
+        return;
+    }
+
+    // Get base rate for selected term
+    if (rateData[age] && rateData[age][term] && rateData[age][term] !== "") {
+        const baseRate = parseFloat(rateData[age][term]);
+        let finalRate = baseRate + parseFloat(professional);
+
+        // Sum Assured adjustment
+        if (sumAssured > 299999) {
+            finalRate -= 0.50;
+        }
+
+        // Divide sum assured by 1000
+        const sumAssuredDiv = sumAssured / 1000;
+
+        // Calculate Premium
+        const premium = finalRate * sumAssuredDiv + 100;
+
+        // Display result
+        displayName.textContent = name;
+        displayAge.textContent = age;
+        displayTerm.textContent = term.replace('_','-');
+        displayGender.textContent = gender;
+        displayProfessional.textContent = "Standard";
+        displaySumAssured.textContent = sumAssured;
+        premiumValue.textContent = premium.toFixed(2);
+
+        resultCard.classList.add('show');
+    } else {
+        errorMessage.textContent = 'Rate not available for this age and term';
+        errorMessage.classList.add('show');
+    }
+});
+</script>
+</body>
+</html>

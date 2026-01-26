@@ -4,315 +4,260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Calculator</title>
+    <title>State Life Premium Calculator</title>
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 40px 10px;
-        }
-
-        .container {
-            max-width: 700px;
+            background: #f5f5f5;
+            padding: 30px;
+            font-family: Arial, sans-serif;
         }
 
         .card {
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
         }
 
         .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px 15px 0 0 !important;
+            background: #002d62;
+            color: #fff;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .btn-calc {
+            background: #002d62;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .btn-calc:hover {
+            background: #001a40;
+        }
+
+        .result-box {
+            background: #ffffff;
+            border: 2px solid #002d62;
             padding: 20px;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #495057;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            padding: 12px 30px;
-            font-weight: 600;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .result-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
             border-radius: 10px;
-            padding: 25px;
             margin-top: 20px;
-            display: none;
         }
 
-        .result-card.show {
-            display: block;
-            animation: slideIn 0.5s ease;
+        .result-box h2 {
+            color: #002d62;
+            font-weight: 700;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .error-message {
-            color: #dc3545;
+        .label-title {
             font-weight: 600;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        @media (max-width: 576px) {
-            .card-body {
-                padding: 15px;
-            }
-
-            .btn-primary {
-                padding: 10px 20px;
-            }
+            color: #002d62;
         }
     </style>
 </head>
 
 <body>
+
     <div class="container">
         <div class="card">
-            <div class="card-header text-center">
-                <h2 class="mb-0">Premium Calculator</h2>
-                <p class="mb-0 small">Enter details to calculate your premium</p>
+            <div class="card-header">
+                <img src="https://waliahmed.com/wp-content/uploads/2024/02/new_statelife_logo.png" alt="State Life Logo"
+                    style="max-height:80px;">
+                <h3 class="mt-2">Premium Calculator</h3>
             </div>
+
             <div class="card-body p-4">
-                <form id="rateForm">
-                    <!-- Name -->
+                <form id="calcForm">
+
+                    <!-- NAME -->
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control form-control-lg" id="name" placeholder="Enter your name"
-                            required>
+                        <label class="label-title">Name</label>
+                        <input type="text" id="name" class="form-control" required>
                     </div>
-                    <!-- DOB -->
-                    <div class="mb-3">
-                        <label for="dob" class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control form-control-lg" id="dob" required>
+
+                    <!-- DOB & GENDER -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="label-title">Date of Birth</label>
+                            <input type="date" id="dob" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="label-title">Gender</label>
+                            <select id="gender" class="form-select" required>
+                                <option value="">Select Gender</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select>
+                        </div>
                     </div>
-                    <!-- Gender -->
+
+                    <!-- TERM -->
                     <div class="mb-3">
-                        <label for="gender" class="form-label">Gender</label>
-                        <select class="form-select form-select-lg" id="gender" required>
-                            <option value="">Select gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
+                        <label class="label-title">Term / Rate</label>
+                        <select id="term" class="form-select" required>
+                            <option value="">Select Term</option>
+                            <option value="03_15">03 / 15</option>
+                            <option value="03_20">03 / 20</option>
+                            <option value="03_10">03 / 10</option>
+                            <option value="81_20">81 / 20</option>
+                            <option value="PLATINUM_91">Platinum 91 / 10</option>
                         </select>
                     </div>
-                    <!-- Term -->
+
+                    <!-- PROFESSION -->
                     <div class="mb-3">
-                        <label for="term" class="form-label">Term / Rate</label>
-                        <select class="form-select form-select-lg" id="term" required>
-                            <option value="">Select term</option>
-                            <option value="03_20">03/20</option>
-                            <option value="03_15">03/15</option>
-                            <option value="03_10">03/10</option>
+                        <label class="label-title">Profession</label>
+                        <select id="profession" class="form-select" required>
+                            <option value="">Select Profession</option>
+                            <option value="1.25">Office Work</option>
+                            <option value="1.25">Teacher</option>
+                            <option value="1.25">Shop Keeper</option>
+                            <option value="1.25">Auto Shop</option>
+                            <option value="1.88">Landlord</option>
+                            <option value="2.50">Army Person</option>
+                            <option value="2.50">Police Person</option>
+                            <option value="2.50">Security Guard</option>
+                            <option value="2.50">Machine Operator</option>
+                            <option value="4.50">Driver</option>
+                            <option value="4.50">Labour</option>
+                            <option value="4.50">Electrician</option>
+                            <option value="4.50">Welder</option>
+                            <option value="4.50">Line Man (Wapda)</option>
+                            <option value="4.50">Line Man (PTCL)</option>
                         </select>
                     </div>
-                    <!-- Professional -->
+
+                    <!-- SUM ASSURED -->
                     <div class="mb-3">
-                        <label for="professional" class="form-label">Professional</label>
-                        <select class="form-select form-select-lg" id="professional" required>
-                            <option value="1.25">Standard</option>
-                        </select>
+                        <label class="label-title">Sum Assured</label>
+                        <input type="number" id="sumAssured" class="form-control" min="0" required>
                     </div>
-                    <!-- Sum Assured -->
-                    <div class="mb-3">
-                        <label for="sumAssured" class="form-label">Sum Assured</label>
-                        <input type="number" class="form-control form-control-lg" id="sumAssured"
-                            placeholder="Enter sum assured" min="0" required>
-                    </div>
-                    <div class="d-grid mt-3">
-                        <button type="submit" class="btn btn-primary btn-lg">Calculate Premium</button>
-                    </div>
+
+                    <button class="btn btn-calc w-100">Calculate Premium</button>
+
                 </form>
 
-                <div class="error-message" id="errorMessage"></div>
+                <div class="result-box" id="resultBox" style="display:none;">
 
-                <!-- Result Card -->
-                <div class="result-card" id="resultCard">
-                    <div class="text-left">
-                        <h2><strong>Name:</strong> <span id="displayName">--</span></h2>
-                        <h2><strong>Premium:</strong> <span id="premiumValue">--</span></h2>
-                        <p><strong>Sum Assured:</strong> <span id="displaySumAssured">--</span></p>
-                        <p><strong>Age:</strong> <span id="displayAge">--</span><strong>Gender:</strong> <span
-                                id="displayGender">--</span></p>
-                        <p><strong>Term:</strong> <span id="displayTerm">--</span></p>
-                        <p><strong>Professional:</strong> <span id="displayProfessional">--</span></p>
-                    </div>
+                    <h2>Name: <span id="rName"></span></h2>
+
+                    <h2>Premium: <span id="rPremium"></span></h2>
+
+                    <p>
+                        <strong>Sum Assured:</strong> <span id="rSum"></span> &nbsp;
+                        <strong>Maturity:</strong> <span id="rMaturity"></span>
+                    </p>
+
+                    <p>
+                        <span><strong>Age:</strong> <span id="rAge"></span></span> &nbsp;
+                        <span><strong>Gender:</strong> <span id="rGender"></span></span>
+                    </p>
+
+                    <p>
+                        <span><strong>Term:</strong> <span id="rTerm"></span></span> &nbsp;
+                        <span><strong>Profession:</strong> <span id="rProf"></span></span>
+                    </p>
+
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Example short rate table
         const rateData = {
-            "20": { "03_20": 47.73, "03_15": 64.44, "03_10": 99.04 },
-            "21": { "03_20": 47.77, "03_15": 64.47, "03_10": 99.07 },
-            "22": { "03_20": 47.82, "03_15": 64.51, "03_10": 99.10 },
-            "23": { "03_20": 47.87, "03_15": 64.55, "03_10": 99.13 },
-            "24": { "03_20": 47.93, "03_15": 64.59, "03_10": 99.16 },
-            "25": { "03_20": 47.99, "03_15": 64.63, "03_10": 99.20 },
-            "26": { "03_20": 48.05, "03_15": 64.69, "03_10": 99.24 },
-            "27": { "03_20": 48.13, "03_15": 64.74, "03_10": 99.32 },
-            "28": { "03_20": 48.22, "03_15": 64.80, "03_10": 99.38 },
-            "29": { "03_20": 48.31, "03_15": 64.87, "03_10": 99.44 },
-            "30": { "03_20": 48.42, "03_15": 64.95, "03_10": 99.53 },
-            "31": { "03_20": 48.54, "03_15": 65.03, "03_10": 99.45 },
-            "32": { "03_20": 48.67, "03_15": 65.13, "03_10": 99.56 },
-            "33": { "03_20": 48.83, "03_15": 65.24, "03_10": 99.64 },
-            "34": { "03_20": 49.00, "03_15": 65.36, "03_10": 99.72 },
-            "35": { "03_20": 49.20, "03_15": 65.50, "03_10": 99.82 },
-            "36": { "03_20": 49.43, "03_15": 65.65, "03_10": 99.93 },
-            "37": { "03_20": 49.69, "03_15": 65.84, "03_10": 100.06 },
-            "38": { "03_20": 49.99, "03_15": 66.04, "03_10": 100.20 },
-            "39": { "03_20": 50.32, "03_15": 66.28, "03_10": 100.36 },
-            "40": { "03_20": 50.71, "03_15": 66.54, "03_10": 100.55 },
-            "41": { "03_20": 51.14, "03_15": 66.85, "03_10": 100.76 },
-            "42": { "03_20": 51.63, "03_15": 67.21, "03_10": 101.00 },
-            "43": { "03_20": 52.17, "03_15": 67.61, "03_10": 101.28 },
-            "44": { "03_20": 52.79, "03_15": 68.07, "03_10": 101.61 },
-            "45": { "03_20": 53.47, "03_15": 68.59, "03_10": 101.97 },
-            "46": { "03_20": 54.23, "03_15": 69.18, "03_10": 102.40 },
-            "47": { "03_20": 55.07, "03_15": 69.84, "03_10": 102.88 },
-            "48": { "03_20": 56.00, "03_15": 70.58, "03_10": 103.44 },
-            "49": { "03_20": 57.02, "03_15": 71.41, "03_10": 104.07 },
-            "50": { "03_20": 58.13, "03_15": 72.32, "03_10": 104.77 },
-            "51": { "03_20": 59.35, "03_15": 73.32, "03_10": 105.57 },
-            "52": { "03_20": 60.66, "03_15": 74.41, "03_10": 106.44 },
-            "53": { "03_20": 62.09, "03_15": 75.59, "03_10": 107.39 },
-            "54": { "03_20": 63.62, "03_15": 76.86, "03_10": 108.43 },
-            "55": { "03_20": 65.27, "03_15": 78.23, "03_10": 109.54 },
-            "56": { "03_20": "", "03_15": 79.69, "03_10": 110.72 },
-            "57": { "03_20": "", "03_15": 81.25, "03_10": 111.99 },
-            "58": { "03_20": "", "03_15": "", "03_10": 113.32 },
-            "59": { "03_20": "", "03_15": "", "03_10": 114.74 },
-            "60": { "03_20": "", "03_15": "", "03_10": 116.25 }
+            "20": { "03_20": 47.75, "03_15": 64.44, "03_10": 99.04, "81_20": 106.03, "PLATINUM_91": 279.48 },
+            "21": { "03_20": 47.77, "03_15": 64.47, "03_10": 99.07, "81_20": 106.07, "PLATINUM_91": 279.51 },
+            "22": { "03_20": 47.82, "03_15": 64.51, "03_10": 99.10, "81_20": 106.14, "PLATINUM_91": 279.55 },
+            "23": { "03_20": 47.87, "03_15": 64.55, "03_10": 99.13, "81_20": 106.20, "PLATINUM_91": 279.58 },
+            "24": { "03_20": 47.93, "03_15": 64.59, "03_10": 99.16, "81_20": 106.28, "PLATINUM_91": 279.62 },
+            "25": { "03_20": 47.99, "03_15": 64.63, "03_10": 99.20, "81_20": 106.35, "PLATINUM_91": 279.67 },
+            "26": { "03_20": 48.05, "03_15": 64.69, "03_10": 99.24, "81_20": 106.41, "PLATINUM_91": 279.69 },
+            "27": { "03_20": 48.13, "03_15": 64.74, "03_10": 99.32, "81_20": 106.51, "PLATINUM_91": 279.75 },
+            "28": { "03_20": 48.22, "03_15": 64.80, "03_10": 99.38, "81_20": 106.62, "PLATINUM_91": 279.79 },
+            "29": { "03_20": 48.31, "03_15": 64.87, "03_10": 99.44, "81_20": 106.72, "PLATINUM_91": 279.84 },
+            "30": { "03_20": 48.42, "03_15": 64.95, "03_10": 99.53, "81_20": 106.85, "PLATINUM_91": 279.94 },
+            "31": { "03_20": 48.54, "03_15": 65.03, "03_10": 99.45, "81_20": 106.99, "PLATINUM_91": 279.98 },
+            "32": { "03_20": 48.67, "03_15": 65.13, "03_10": 99.56, "81_20": 107.16, "PLATINUM_91": 280.05 },
+            "33": { "03_20": 48.83, "03_15": 65.24, "03_10": 99.64, "81_20": 107.32, "PLATINUM_91": 280.14 },
+            "34": { "03_20": 49.00, "03_15": 65.36, "03_10": 99.72, "81_20": 107.50, "PLATINUM_91": 280.21 },
+            "35": { "03_20": 49.20, "03_15": 65.50, "03_10": 99.82, "81_20": 107.73, "PLATINUM_91": 280.41 },
+            "36": { "03_20": 49.43, "03_15": 65.65, "03_10": 99.93, "81_20": 107.99, "PLATINUM_91": 280.53 },
+            "37": { "03_20": 49.69, "03_15": 65.84, "03_10": 100.06, "81_20": 108.28, "PLATINUM_91": 280.70 },
+            "38": { "03_20": 49.99, "03_15": 66.04, "03_10": 100.20, "81_20": 108.61, "PLATINUM_91": 280.92 },
+            "39": { "03_20": 50.32, "03_15": 66.28, "03_10": 100.36, "81_20": 108.97, "PLATINUM_91": 281.11 },
+            "40": { "03_20": 50.71, "03_15": 66.54, "03_10": 100.55, "81_20": 109.41, "PLATINUM_91": 281.31 },
+            "41": { "03_20": 51.14, "03_15": 66.85, "03_10": 100.76, "81_20": 109.87, "PLATINUM_91": 281.51 },
+            "42": { "03_20": 51.63, "03_15": 67.21, "03_10": 101.00, "81_20": 110.41, "PLATINUM_91": 281.58 },
+            "43": { "03_20": 52.17, "03_15": 67.61, "03_10": 101.28, "81_20": 110.98, "PLATINUM_91": 281.87 },
+            "44": { "03_20": 52.79, "03_15": 68.07, "03_10": 101.61, "81_20": 111.66, "PLATINUM_91": 282.20 },
+            "45": { "03_20": 53.47, "03_15": 68.59, "03_10": 101.97, "81_20": 112.38, "PLATINUM_91": 282.50 },
+            "46": { "03_20": 54.23, "03_15": 69.18, "03_10": 102.40, "81_20": 113.20, "PLATINUM_91": 283.01 },
+            "47": { "03_20": 55.07, "03_15": 69.84, "03_10": 102.88, "81_20": 114.10, "PLATINUM_91": 283.52 },
+            "48": { "03_20": 56.00, "03_15": 70.58, "03_10": 103.44, "81_20": 115.19, "PLATINUM_91": 283.82 },
+            "49": { "03_20": 57.02, "03_15": 71.41, "03_10": 104.07, "81_20": 116.37, "PLATINUM_91": 284.07 },
+            "50": { "03_20": 58.13, "03_15": 72.32, "03_10": 104.77, "81_20": 117.37, "PLATINUM_91": 284.24 },
+            "51": { "03_20": 59.35, "03_15": 73.32, "03_10": 105.57, "81_20": 118.68, "PLATINUM_91": 285.44 },
+            "52": { "03_20": 60.66, "03_15": 74.41, "03_10": 106.44, "81_20": 120.07, "PLATINUM_91": 287.18 },
+            "53": { "03_20": 62.09, "03_15": 75.59, "03_10": 107.39, "81_20": 121.59, "PLATINUM_91": 288.19 },
+            "54": { "03_20": 63.62, "03_15": 76.86, "03_10": 108.43, "81_20": 123.19, "PLATINUM_91": 289.27 },
+            "55": { "03_20": 65.27, "03_15": 78.23, "03_10": 109.54, "81_20": 124.90, "PLATINUM_91": 290.43 },
         };
+        function formatPKR(val) {
+            return "Rs " + val.toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
 
-        const form = document.getElementById('rateForm');
-        const resultCard = document.getElementById('resultCard');
-        const errorMessage = document.getElementById('errorMessage');
-        const displayName = document.getElementById('displayName');
-        const displayAge = document.getElementById('displayAge');
-        const displayTerm = document.getElementById('displayTerm');
-        const displayGender = document.getElementById('displayGender');
-        const displayProfessional = document.getElementById('displayProfessional');
-        const displaySumAssured = document.getElementById('displaySumAssured');
-        const premiumValue = document.getElementById('premiumValue');
-
-        form.addEventListener('submit', function (e) {
+        document.getElementById('calcForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const name = document.getElementById('name').value.trim();
-            const dob = document.getElementById('dob').value;
-            const gender = document.getElementById('gender').value;
-            const term = document.getElementById('term').value;
-            const professional = document.getElementById('professional').value;
-            const sumAssuredInput = document.getElementById('sumAssured').value;
-            const sumAssured = parseFloat(sumAssuredInput);
+            let name = document.getElementById('name').value;
+            let dob = new Date(document.getElementById('dob').value);
+            let gender = document.getElementById('gender').value;
+            let term = document.getElementById('term').value;
+            let prof = document.getElementById('profession');
+            let profRate = parseFloat(prof.value);
+            let profText = prof.options[prof.selectedIndex].text;
+            let sumAssured = parseFloat(document.getElementById('sumAssured').value);
 
-            resultCard.classList.remove('show');
-            errorMessage.classList.remove('show');
+            let today = new Date();
+            let yrs = today.getFullYear() - dob.getFullYear();
+            let mon = today.getMonth() - dob.getMonth();
+            if (mon < 0) { yrs--; mon += 12; }
+            if (mon >= 6) yrs++;
 
-            if (!name || !dob || !gender || !term || !professional || !sumAssuredInput || isNaN(sumAssured)) {
-                errorMessage.textContent = 'Please fill in all fields correctly';
-                errorMessage.classList.add('show');
+            if (gender === "Female") {
+                yrs -= 2;
+                if (yrs < 20) yrs = 20;
+            }
+
+            if (!rateData[yrs] || !rateData[yrs][term]) {
+                alert("Rate not available for this age/term");
                 return;
             }
 
-            // Calculate Age
-           const dobDate = new Date(dob);
-const today = new Date();
+            let baseRate = rateData[yrs][term];
+            let adjRate = baseRate + profRate;
+            if (sumAssured > 299999) adjRate -= 0.50;
 
-// difference in milliseconds
-const diffTime = today - dobDate;
+            let maturity = sumAssured * 4;
+            let prem = (adjRate * (sumAssured / 1000)) + 100;
 
-// age in years (decimal)
-let exactAge = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+            document.getElementById('rName').textContent = name;
+            document.getElementById('rAge').textContent = yrs;
+            document.getElementById('rGender').textContent = gender;
+            document.getElementById('rTerm').textContent = term.replace('_', ' / ');
+            document.getElementById('rProf').textContent = profText;
+            document.getElementById('rSum').textContent = formatPKR(sumAssured);
+            document.getElementById('rMaturity').textContent = formatPKR(maturity);
+            document.getElementById('rPremium').textContent = formatPKR(prem);
 
-let age;
-
-// 0.5 rule
-if ((exactAge - Math.floor(exactAge)) > 0.5) {
-    age = Math.floor(exactAge) + 1;
-} else {
-    age = Math.floor(exactAge);
-}
-
-// Female relaxation
-if (gender === 'Female') age -= 2;
-
-if (age < 20 || age > 60) {
-    errorMessage.textContent = 'Rate not available for this age';
-    errorMessage.classList.add('show');
-    return;
-}
-
-
-            // Get base rate for selected term
-            if (rateData[age] && rateData[age][term] && rateData[age][term] !== "") {
-                const baseRate = parseFloat(rateData[age][term]);
-                let finalRate = baseRate + parseFloat(professional);
-
-                // Sum Assured adjustment
-                if (sumAssured > 299999) {
-                    finalRate -= 0.50;
-                }
-
-                // Divide sum assured by 1000
-                const sumAssuredDiv = sumAssured / 1000;
-
-                // Calculate Premium
-                const premium = finalRate * sumAssuredDiv + 100;
-
-                // Display result
-                displayName.textContent = name;
-                displayAge.textContent = age;
-                displayTerm.textContent = term.replace('_', '-');
-                displayGender.textContent = gender;
-                displayProfessional.textContent = "Standard";
-                displaySumAssured.textContent = sumAssured;
-                premiumValue.textContent = premium.toFixed(2);
-
-                resultCard.classList.add('show');
-            } else {
-                errorMessage.textContent = 'Rate not available for this age and term';
-                errorMessage.classList.add('show');
-            }
+            document.getElementById('resultBox').style.display = "block";
         });
     </script>
+
 </body>
 
 </html>

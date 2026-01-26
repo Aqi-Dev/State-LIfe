@@ -253,19 +253,33 @@
             }
 
             // Calculate Age
-            const dobDate = new Date(dob);
-            const today = new Date();
-            let age = today.getFullYear() - dobDate.getFullYear();
-            if (today.getMonth() < dobDate.getMonth() || (today.getMonth() === dobDate.getMonth() && today.getDate() < dobDate.getDate())) {
-                age--;
-            }
-            if (gender === 'Female') age -= 2;
+           const dobDate = new Date(dob);
+const today = new Date();
 
-            if (age < 20 || age > 60) {
-                errorMessage.textContent = 'Rate not available for this age';
-                errorMessage.classList.add('show');
-                return;
-            }
+// difference in milliseconds
+const diffTime = today - dobDate;
+
+// age in years (decimal)
+let exactAge = diffTime / (1000 * 60 * 60 * 24 * 365.25);
+
+let age;
+
+// 0.5 rule
+if ((exactAge - Math.floor(exactAge)) > 0.5) {
+    age = Math.floor(exactAge) + 1;
+} else {
+    age = Math.floor(exactAge);
+}
+
+// Female relaxation
+if (gender === 'Female') age -= 2;
+
+if (age < 20 || age > 60) {
+    errorMessage.textContent = 'Rate not available for this age';
+    errorMessage.classList.add('show');
+    return;
+}
+
 
             // Get base rate for selected term
             if (rateData[age] && rateData[age][term] && rateData[age][term] !== "") {

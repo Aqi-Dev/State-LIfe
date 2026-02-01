@@ -211,56 +211,61 @@
             "59": { "03_20": "",    "03_15": "",    "03_10": 114.74,    "81_20": "",     "PLATINUM_91": 295.81 },
             "60": { "03_20": "",    "03_15": "",    "03_10": 116.25,    "81_20": "",     "PLATINUM_91": 297.32 },
         };
-        function formatPKR(val) {
-            return "Rs " + val.toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
+        
+        function formatPKR(v){
+    return "Rs " + v.toLocaleString("en-PK",{minimumFractionDigits:2});
+}
 
-        document.getElementById('calcForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+document.getElementById("calcForm").addEventListener("submit", function(e){
+    e.preventDefault();
 
-            let name = document.getElementById('name').value;
-            let dob = new Date(document.getElementById('dob').value);
-            let gender = document.getElementById('gender').value;
-            let term = document.getElementById('term').value;
-            let prof = document.getElementById('profession');
-            let profRate = parseFloat(prof.value);
-            let profText = prof.options[prof.selectedIndex].text;
-            let sumAssured = parseFloat(document.getElementById('sumAssured').value);
+    let name = document.getElementById("name").value;
+    let dob = new Date(document.getElementById("dob").value);
+    let gender = document.getElementById("gender").value;
+    let term = document.getElementById("term").value;
+    let profSel = document.getElementById("profession");
+    let profRate = parseFloat(profSel.value);
+    let profText = profSel.options[profSel.selectedIndex].text;
+    let sum = parseFloat(document.getElementById("sumAssured").value);
 
-            let today = new Date();
-            let yrs = today.getFullYear() - dob.getFullYear();
-            let mon = today.getMonth() - dob.getMonth();
-            if (mon < 0) { yrs--; mon += 12; }
-            if (mon >= 6) yrs++;
+    // AGE CALC
+    let age = new Date().getFullYear() - dob.getFullYear();
+    if(gender === "Female"){
+        age -= 2;
+        if(age < 20) age = 20;
+    }
 
-            if (gender === "Female") {
-                yrs -= 2;
-                if (yrs < 20) yrs = 20;
-            }
+    // RATE CHECK
+    if(!rateData[age] || !rateData[age][term]){
+        alert("Rate not available");
+        return;
+    }
 
-            if (!rateData[yrs] || !rateData[yrs][term]) {
-                alert("Rate not available for this age/term");
-                return;
-            }
+    // PROFESSION RULES
+    if(term === "81_20") profRate = 2.78;
+    if(term === "PLATINUM_91") profRate = 3.42;
 
-            let baseRate = rateData[yrs][term];
-            let adjRate = baseRate + profRate;
-            if (sumAssured > 299999) adjRate -= 0.50;
+    let rate = rateData[age][term] + profRate;
+    let premium = (rate * (sum / 1000)) + 100;
 
-            let maturity = sumAssured * 4;
-            let prem = (adjRate * (sumAssured / 1000)) + 100;
+    // MATURITY RULES
+    let maturity = sum * 4;
+    if(term === "03_10") maturity = sum * 1.50;
+    if(term === "03_15") maturity = sum * 2.50;
+    if(term === "PLATINUM_91") maturity = sum * 1.6;
 
-            document.getElementById('rName').textContent = name;
-            document.getElementById('rAge').textContent = yrs;
-            document.getElementById('rGender').textContent = gender;
-            document.getElementById('rTerm').textContent = term.replace('_', ' / ');
-            document.getElementById('rProf').textContent = profText;
-            document.getElementById('rSum').textContent = formatPKR(sumAssured);
-            document.getElementById('rMaturity').textContent = formatPKR(maturity);
-            document.getElementById('rPremium').textContent = formatPKR(prem);
+    // DISPLAY
+    document.getElementById("rName").textContent = name;
+    document.getElementById("rAge").textContent = age;
+    document.getElementById("rGender").textContent = gender;
+    document.getElementById("rTerm").textContent = term.replace("_"," / ");
+    document.getElementById("rProf").textContent = profText;
+    document.getElementById("rSum").textContent = formatPKR(sum);
+    document.getElementById("rMaturity").textContent = formatPKR(maturity);
+    document.getElementById("rPremium").textContent = formatPKR(premium);
 
-            document.getElementById('resultBox').style.display = "block";
-        });
+    document.getElementById("resultBox").style.display = "block";
+});
     </script>
 
 </body>
